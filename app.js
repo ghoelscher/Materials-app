@@ -29,6 +29,17 @@ const planeMap = {
   bc: [1, 2],
 };
 
+const projectIsometric = (position, width, height, padding) => {
+  const plotWidth = width - padding * 2;
+  const plotHeight = height - padding * 2;
+  const [x, y, z] = position;
+  const isoX = (x - y) * 0.6;
+  const isoY = (x + y) * 0.35 - z * 0.75;
+  const centeredX = padding + plotWidth / 2 + isoX * plotWidth;
+  const centeredY = padding + plotHeight / 2 + isoY * plotHeight;
+  return [centeredX, centeredY, z];
+};
+
 const formatNumber = (value) => value.toFixed(2);
 
 const positionDistance = (a, b, lattice) => {
@@ -129,7 +140,6 @@ const renderCellParameters = () => {
 
 const renderStructure = () => {
   const { basis } = state.material;
-  const planeIndices = planeMap[state.plane];
   const width = structureCanvas.width;
   const height = structureCanvas.height;
   ctx.clearRect(0, 0, width, height);
@@ -142,21 +152,35 @@ const renderStructure = () => {
   ctx.lineWidth = 2;
   ctx.strokeRect(padding, padding, plotWidth, plotHeight);
 
-  basis.forEach((atom) => {
+  const atomsWithProjection = basis.map((atom) => {
+    if (state.plane === "3d") {
+      const [x, y, z] = projectIsometric(atom.position, width, height, padding);
+      return { atom, x, y, depth: z };
+    }
+
+    const planeIndices = planeMap[state.plane];
     const x = padding + atom.position[planeIndices[0]] * plotWidth;
     const y = padding + (1 - atom.position[planeIndices[1]]) * plotHeight;
-    ctx.beginPath();
-    ctx.fillStyle = elementColors[atom.element] || "#999";
-    ctx.arc(x, y, 10, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "#1b1f2a";
-    ctx.lineWidth = 1;
-    ctx.stroke();
+    return { atom, x, y, depth: 0 };
   });
+
+  atomsWithProjection
+    .sort((a, b) => a.depth - b.depth)
+    .forEach(({ atom, x, y, depth }) => {
+      const radius = state.plane === "3d" ? 8 + depth * 6 : 10;
+      ctx.beginPath();
+      ctx.fillStyle = elementColors[atom.element] || "#999";
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = "#1b1f2a";
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
 
   ctx.fillStyle = "#1b1f2a";
   ctx.font = "14px Inter";
-  ctx.fillText(`Plane: ${state.plane.toUpperCase()}`, padding, height - 15);
+  const label = state.plane === "3d" ? "3D projection" : `Plane: ${state.plane.toUpperCase()}`;
+  ctx.fillText(label, padding, height - 15);
 };
 
 const renderCoordination = () => {

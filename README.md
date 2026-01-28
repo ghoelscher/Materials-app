@@ -15,7 +15,7 @@ python3 -m http.server 8000
 ## How to use the app
 - Pick a material from the dropdown.
 - Switch between **Overview**, **Structure View**, **Coordination**, and **Diffraction** tabs.
-- Adjust the **View plane** to change the projection of the unit cell.
+- Adjust the **View plane** (including the 3D projection option) to change the unit cell view.
 - Use the **Neighbor cutoff** slider to study coordination changes.
 
 ## Add your own material
