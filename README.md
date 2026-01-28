@@ -37,5 +37,9 @@ Open `data.js` and add a new entry to the `materials` array. Each entry needs:
 - **Case-sensitive paths:** GitHub Pages is case-sensitive; make sure the URL uses the exact repo name and casing.
 - **Private repo without Pages access:** Free accounts require public repos for Pages unless you have a paid plan.
 
+### Troubleshooting “Address already in use” when starting the local server
+- **Another server is already running on port 8000:** Stop it with `Ctrl + C` in the terminal where it is running.
+- **Use a different port:** Start the server on another port, for example `python3 -m http.server 8001`, and open `http://localhost:8001`.
+
 ---
 Made for classroom use. Customize and expand as needed.
