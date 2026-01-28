@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Materials Structure Explorer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <div>
+      <p class="eyebrow">Intro to Materials Physics</p>
+      <h1>Materials Structure Explorer</h1>
+      <p>
+        Compare crystal structures, unit cells, coordination environments, and diffraction fingerprints
+        for common materials. Use the controls below to switch materials and explore multiple views.
+      </p>
+    </div>
+    <div class="hero-controls">
+      <label class="control">
+        Material
+        <select id="materialSelect"></select>
+      </label>
+      <label class="control">
+        View plane
+        <select id="planeSelect">
+          <option value="ab">a-b plane</option>
+          <option value="ac">a-c plane</option>
+          <option value="bc">b-c plane</option>
+          <option value="3d">3D projection</option>
+        </select>
+      </label>
+      <label class="control">
+        Neighbor cutoff (Å)
+        <input id="cutoffRange" type="range" min="1.5" max="4.5" step="0.1" value="3" />
+        <span id="cutoffValue">3.0</span>
+      </label>
+    </div>
+  </header>
+
+  <main>
+    <section class="tab-bar" role="tablist">
+      <button class="tab active" data-tab="overview" role="tab">Overview</button>
+      <button class="tab" data-tab="structure" role="tab">Structure View</button>
+      <button class="tab" data-tab="coordination" role="tab">Coordination</button>
+      <button class="tab" data-tab="diffraction" role="tab">Diffraction</button>
+    </section>
+
+    <section id="overview" class="panel active" role="tabpanel">
+      <div class="grid-2">
+        <div class="card" id="materialSummary"></div>
+        <div class="card" id="propertyCards"></div>
+      </div>
+      <div class="card" id="basisTable"></div>
+    </section>
+
+    <section id="structure" class="panel" role="tabpanel">
+      <div class="grid-2">
+        <div class="card">
+          <h2>Unit cell projection</h2>
+          <canvas id="structureCanvas" width="520" height="420"></canvas>
+          <p class="hint">Atoms are colored by element; projection is scaled to fit the canvas.</p>
+        </div>
+        <div class="card">
+          <h2>Unit cell parameters</h2>
+          <div id="cellParameters"></div>
+          <div class="legend" id="elementLegend"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="coordination" class="panel" role="tabpanel">
+      <div class="grid-2">
+        <div class="card">
+          <h2>Coordination environments</h2>
+          <div id="coordinationSummary"></div>
+        </div>
+        <div class="card">
+          <h2>Neighbor list (within cutoff)</h2>
+          <div class="table" id="neighborTable"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="diffraction" class="panel" role="tabpanel">
+      <div class="card">
+        <h2>Simulated X-ray diffraction fingerprint</h2>
+        <svg id="diffractionChart" viewBox="0 0 800 240" role="img"></svg>
+        <p class="hint">Peak positions are approximate and intended for conceptual comparison.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Built for classroom exploration. Add more materials in <code>data.js</code>.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
